@@ -34,7 +34,7 @@ import sys # to use the sys.exit() command to stop execution
 
 # filepaths
 path_cost = '/net/h2o/climphys/hmaurice/Practicum_meteoswiss_datasets/'
-
+ 
 #model = ['CanESM2', 'GFDL-ESM2M', 'IPSL-CM5A-MR', 'NorESM1-M']
 model = ['BNU-ESM', 'CanESM2', 'FGOALS-g2', 'GFDL-CM3', 'GFDL-ESM2G', 'GFDL-ESM2M',
          'IPSL-CM5A-LR', 'IPSL-CM5A-MR', 'IPSL-CM5B-LR', 'NorESM1-M']
