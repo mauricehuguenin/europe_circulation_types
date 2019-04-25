@@ -37,7 +37,6 @@ path_cost='/net/h2o/climphys/hmaurice/Practicum_meteoswiss_output/cost/cesm/'
 filenames = [i for i in os.listdir(path_ensembles) if i.startswith('z500_psl_CESM12-LE_historical_')
              and i.endswith('1940-2099.nc')]
 
-
 # ~~~ pre-processing procedure with cdo ~~~ #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
  
