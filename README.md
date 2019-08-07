@@ -6,3 +6,4 @@ Scripts for Project on Frequency and Persistence Changes of Central European Cir
 - Upload and annotate the matlab file I used to create my circulation type maps
 - Link to article and supporting information
 - More info on this readme -> Keeping in mind that another practicum student, Msc student might continue in this field
+- Upload figures as well as in learning_python repository. This way people see which script creates what (check if allowed when I submit)
