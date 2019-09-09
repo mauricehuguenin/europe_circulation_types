@@ -1,0 +1,612 @@
+# Purpose: Summary plot with future changes to frequency, persistence, temperature and precipitation
+#          to the main circulation types (W, NW, SW and N) during seasons
+#          (2, 4) summer and winter, or during the seasons
+#          (1, 3) spring and autumn.
+#          In addition, create a second plot with future changes in all ensemble members
+#          (boxplots) for the Supporting Information
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# Project:  Practicum MeteoSwiss/ETH Zurich                                                     #
+#           Frequency and Persistence of Central European Circulation Types                     #
+# My Name:  Maurice Huguenin-Virchaux                                                           #
+# My Email: hmaurice@student.ethz.ch                                                            #
+# Date:     10.07.2019, 10:17 AEST                                                              #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# library(latex2exp) # package for LaTeX font in plots
+library(base); library(ggplot2) # for plotting
+library(reshape); library(magrittr); library(ggrepel) # for repelling (non-overlapping) labels
+library(ggnewscale); library(shadowtext)
+library(RColorBrewer) # for csutom colours
+library(grid); library(gridExtra); library(ggpubr)
+# choose whether to include either the first four most frequent circulation types or the rare ones
+main <- 1             # or main <- 0    (1 = yes; create figure with W, SW, NW and N)
+#                                         (0 = no; create figure with NE, E, SE, S, C and A)
+seasons <- 1:4       # or seasons <- (1,3)  (2, 4) = create plots for summer & winter season
+#                                         (1, 3) = create plots for spring & autumn season
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ preamble and data load in ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ########
+
+if (method == 'Z500'){
+  classification <- 'wkwtg1d0'
+} else if (method == 'PSL'){
+  classification <- 'wkwtp1d0'
+}
+cesm_data <- paste('E:/Praktikum MeteoSchweiz/cost_files/cost_CESM12-LE_historical_1960-2099_',method,'.dat', sep="")
+# that's the data with all ensembles that work
+cmip5_data <- paste('E:/Praktikum MeteoSchweiz/cost_files/cost_CMIP5_historical_rcp85_models_that_work.dat')
+
+# adapting ggplot theme to suit my needs
+theme_set(theme_bw() + 
+            theme(axis.line = element_line(colour = "black"),
+                  panel.grid.major.y = element_line(colour = "grey"),
+                  panel.grid.major = element_line(size = 0.1),
+                  panel.grid.major.x = element_blank(),
+                  panel.grid.minor = element_blank(),
+                  # panel.border = element_blank(),
+                  legend.title = element_blank(),
+                  plot.title = element_text(size = 20),
+                  axis.title.x = element_text(size = 20),
+                  axis.title.y = element_text(size = 20),
+                  legend.text=element_text(size = 20),
+                  legend.position = "bottom",
+                  panel.background = element_blank(), 
+                  axis.text.x = element_text(size= 17), # set size of labels relative to
+                  # default which is 11
+                  axis.text.y = element_text(size= 17)))
+
+# colour bar 
+Reds <- brewer.pal(9, "Reds")      # red colour scale with 9 entries
+Blues <- brewer.pal(9, "Blues")    # blue colour scale with 9 entries
+
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ load in CESM and CMIP5 data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ########
+
+# initiating data.frame where I put in my stuff
+CESM <- data.frame(matrix(NA, nrow = 10, ncol = 7))
+CESM[,1] <- c('W','SW','NW','N','NE','E','SE','S','C','A')
+colnames(CESM) <- c('type', 'temperature', 'precipitation', 
+                    'frequency', 'persistence', 'period', 'model_type')
+CMIP5 <- CESM  # copy-paste data frame structure
+
+# # load in frequency of past and future data for CESM and CMIP5
+path <- 'E:/Praktikum MeteoSchweiz/r_scripts/'
+f1 = paste('workspace_frequency_for_summary_figure_CESM_CMIP5')
+f2 = paste('workspace_persistence_for_summary_figure_CESM_CMIP5')
+load(file = paste(path, f1, '.RData',sep=''))
+load(file = paste(path, f2, '.RData',sep=''))
+# delete those newly imported variables which I do not need this time around
+rm (mean_freq_CESM, mean_freq_CMIP5, mean_pers_CESM, mean_pers_CMIP5)
+
+freq_perc_CESM[,6] <- 1; colnames(freq_perc_CESM)[c(1,6)] <- c('type','model_type')
+freq_perc_CMIP5[,6] <- 2; colnames(freq_perc_CMIP5)[c(1,6)] <- c('type','model_type')
+# combine data from CESM and CMIP5
+all_model_freq <- rbind(freq_perc_CESM,freq_perc_CMIP5)
+
+persist_perc_CESM[,6] <- 1; colnames(persist_perc_CESM)[c(1,6)] <- c('type','model_type')
+persist_perc_CMIP5[,6] <- 2; colnames(persist_perc_CMIP5)[c(1,6)] <- c('type','model_type')
+# combine data from CESM and CMIP5
+all_model_pers <- rbind(persist_perc_CESM,persist_perc_CMIP5)
+
+# again, clean up workspace
+rm(freq_perc_CESM, freq_perc_CMIP5, persist_perc_CESM, persist_perc_CMIP5)
+
+
+for (s in seasons){ # plot figures for (2) summer and (4) winter season only
+  if (s == 1){ # spring
+    f3 = paste('domain_temp_diff_cmip5_season_',s,sep='')
+    f4 = paste('domain_precip_diff_cmip5_season_',s,sep='')
+    
+    f5 = paste('domain_temp_diff_cesm_season_',s,sep='')
+    f6 = paste('domain_precip_diff_cesm_season_',s,sep='')
+    # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
+    
+    # ~~~~~ read in values for CESM
+    temp <- read.table(file = paste(path, f5, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f6, '.txt',sep=''))
+    
+    
+    temp[,85] <- 'temperature'; precip[,85] <- 'precipitation'
+    
+    CESM <- temp;
+    CESM[11:20,] <- precip;
+    CESM[,86] <- 1; CESM[,87] <- s
+    colnames(CESM)[86] <- 'model_type'
+    colnames(CESM)[1] <- 'type'
+    colnames(CESM)[85] <- 'var'
+    colnames(CESM)[87] <- 'season'
+    
+    # ~~~~~ read in values for CMIP5
+    temp <- read.table(file = paste(path, f3, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f4, '.txt',sep=''))
+    
+    
+    temp[,25] <- 'temperature'; precip[,25] <- 'precipitation'; 
+    
+    CMIP5 <- temp;
+    CMIP5[11:20,] <- precip;
+    CMIP5[,26] <- 2; CMIP5[,27] <- s
+    colnames(CMIP5)[26] <- 'model_type'
+    colnames(CMIP5)[1] <- 'type'
+    colnames(CMIP5)[25] <- 'var'
+    colnames(CMIP5)[27] <- 'season'
+    
+    
+    # allocate data frame for spring
+    CESM_spring_season <- CESM; CMIP5_spring_season <- CMIP5; rm(CESM, CMIP5, temp, precip)
+    
+  }            
+  else if (s == 2){ # summer
+    f3 = paste('domain_temp_diff_cmip5_season_',s,sep='')
+    f4 = paste('domain_precip_diff_cmip5_season_',s,sep='')
+    
+    f5 = paste('domain_temp_diff_cesm_season_',s,sep='')
+    f6 = paste('domain_precip_diff_cesm_season_',s,sep='')
+    # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
+    
+    # ~~~~~ read in values for CESM
+    temp <- read.table(file = paste(path, f5, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f6, '.txt',sep=''))
+    
+    
+    temp[,85] <- 'temperature'; precip[,85] <- 'precipitation'
+    
+    CESM <- temp;
+    CESM[11:20,] <- precip;
+    CESM[,86] <- 1; CESM[,87] <- s
+    colnames(CESM)[86] <- 'model_type'
+    colnames(CESM)[1] <- 'type'
+    colnames(CESM)[85] <- 'var'
+    colnames(CESM)[87] <- 'season'
+    
+    # ~~~~~ read in values for CMIP5
+    temp <- read.table(file = paste(path, f3, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f4, '.txt',sep=''))
+    
+    
+    temp[,25] <- 'temperature'; precip[,25] <- 'precipitation'; 
+    
+    CMIP5 <- temp;
+    CMIP5[11:20,] <- precip;
+    CMIP5[,26] <- 2; CMIP5[,27] <- s
+    colnames(CMIP5)[26] <- 'model_type'
+    colnames(CMIP5)[1] <- 'type'
+    colnames(CMIP5)[25] <- 'var'
+    colnames(CMIP5)[27] <- 'season'
+    
+    
+    # allocate data frame for summer
+    CESM_summer_season <- CESM; CMIP5_summer_season <- CMIP5; rm(CESM, CMIP5, temp, precip)
+    
+  }
+  else if (s == 3){ # autumn
+    f3 = paste('domain_temp_diff_cmip5_season_',s,sep='')
+    f4 = paste('domain_precip_diff_cmip5_season_',s,sep='')
+    
+    f5 = paste('domain_temp_diff_cesm_season_',s,sep='')
+    f6 = paste('domain_precip_diff_cesm_season_',s,sep='')
+    # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
+    
+    # ~~~~~ read in values for CESM
+    temp <- read.table(file = paste(path, f5, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f6, '.txt',sep=''))
+    
+    
+    temp[,85] <- 'temperature'; precip[,85] <- 'precipitation'
+    
+    CESM <- temp;
+    CESM[11:20,] <- precip;
+    CESM[,86] <- 1; CESM[,87] <- s
+    colnames(CESM)[86] <- 'model_type'
+    colnames(CESM)[1] <- 'type'
+    colnames(CESM)[85] <- 'var'
+    colnames(CESM)[87] <- 'season'
+    
+    # ~~~~~ read in values for CMIP5
+    temp <- read.table(file = paste(path, f3, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f4, '.txt',sep=''))
+    
+    
+    temp[,25] <- 'temperature'; precip[,25] <- 'precipitation'; 
+    
+    CMIP5 <- temp;
+    CMIP5[11:20,] <- precip;
+    CMIP5[,26] <- 2; CMIP5[,27] <- s
+    colnames(CMIP5)[26] <- 'model_type'
+    colnames(CMIP5)[1] <- 'type'
+    colnames(CMIP5)[25] <- 'var'
+    colnames(CMIP5)[27] <- 'season'
+    
+    
+    # allocate data frame for autumn
+    CESM_autumn_season <- CESM; CMIP5_autumn_season <- CMIP5; rm(CESM, CMIP5, temp, precip)
+    
+  }            
+  else if (s == 4){ # summer
+    f3 = paste('domain_temp_diff_cmip5_season_',s,sep='')
+    f4 = paste('domain_precip_diff_cmip5_season_',s,sep='')
+    
+    f5 = paste('domain_temp_diff_cesm_season_',s,sep='')
+    f6 = paste('domain_precip_diff_cesm_season_',s,sep='')
+    # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- # -- #
+    
+    # ~~~~~ read in values for CESM
+    temp <- read.table(file = paste(path, f5, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f6, '.txt',sep=''))
+    
+    
+    temp[,85] <- 'temperature'; precip[,85] <- 'precipitation'
+    
+    CESM <- temp;
+    CESM[11:20,] <- precip;
+    CESM[,86] <- 1; CESM[,87] <- s
+    colnames(CESM)[86] <- 'model_type'
+    colnames(CESM)[1] <- 'type'
+    colnames(CESM)[85] <- 'var'
+    colnames(CESM)[87] <- 'season'
+    
+    # ~~~~~ read in values for CMIP5
+    temp <- read.table(file = paste(path, f3, '.txt',sep=''))
+    # colnames(temp)[1] <- 'type'
+    precip <- read.table(file = paste(path, f4, '.txt',sep=''))
+    
+    
+    temp[,25] <- 'temperature'; precip[,25] <- 'precipitation'; 
+    
+    CMIP5 <- temp;
+    CMIP5[11:20,] <- precip;
+    CMIP5[,26] <- 2; CMIP5[,27] <- s
+    colnames(CMIP5)[26] <- 'model_type'
+    colnames(CMIP5)[1] <- 'type'
+    colnames(CMIP5)[25] <- 'var'
+    colnames(CMIP5)[27] <- 'season'
+    
+    
+    # allocate data frame for winter
+    CESM_winter_season <- CESM; CMIP5_winter_season <- CMIP5; rm(CESM, CMIP5, temp, precip)
+    
+  }            
+}
+
+# combine data for all seasons                 
+CESM <- rbind(CESM_spring_season,CESM_summer_season,CESM_autumn_season,CESM_winter_season); 
+CMIP5 <- rbind(CMIP5_spring_season, CMIP5_summer_season,CMIP5_autumn_season, CMIP5_winter_season)               
+
+a <- melt(CESM, id=c('type', 'model_type','var','season'))
+b <- melt(CMIP5, id=c('type', 'model_type','var','season'))
+all_model <- rbind(a, b); rm(a, b)
+
+
+# here in this part I create the ensemble mean data frame
+# I know this is a horrible way to do it with all these copy-paste fragements but time is 
+# running out (only 4 more days to go until 30th APril 2019) and it does the job
+# ...besides I also need to create more figures for the supplementary information
+# and hadn't even written anything during the last three weeks so far
+
+# tl;dr: I AM STRESSED.
+
+all_model_mean <- data.frame(matrix(NA, nrow = 20, ncol = 18))
+colnames(all_model_mean) <- c('type',
+                              'freq_s1','freq_s2','freq_s3','freq_s4',
+                              'pers_s1','pers_s2','pers_s3','perse_s4',
+                              'temp_s1','temp_s2','temp_s3','temp_s4',
+                              'precip_s1','precip_s2','precip_s3','precip_s4','model_type')
+
+all_model_mean[1:10,1] <- 1:10;   all_model_mean[1:10,18] <- 1; # CESM data
+all_model_mean[11:20,1] <- 1:10;   all_model_mean[11:20,18] <- 2; # CESM data
+# calculate ensemble means for ensemble plot further down
+
+# replace Inf values with NA
+all_model[all_model==Inf] <- NA
+all_model_freq[all_model_freq==Inf] <- NA
+all_model_pers[all_model_pers==Inf] <- NA
+
+for (i in 1:10){ # loop through all circulation types
+  for (s in 1:4){ # loop through all seasons
+    for (model in 1:2){ # loop through 1 = CESM and 2 = CMIP5
+      if (model == 1){
+        skip <- 0 # if CESM, then write data into first ten rows
+      } else if (model == 2){
+        skip <- 10 # if CMIP5, then skip 10 first rows and instead insert data into rows 11-20
+      }
+  # temperature mean for CESM and CMIP5
+  all_model_mean[i+skip,9+s] <- mean(all_model[all_model[,1] == i & # select circulation type
+                                          all_model[,2] == model & # select model type (CESM/CMIP5)
+                                          all_model[,3] == 'temperature' & # select variable
+                                          all_model[,4] == seasons[s],6],na.rm=TRUE) # select season
+  # precipitation mean for CESM and CMIP5
+  all_model_mean[i+skip,13+s] <- mean(all_model[all_model[,1] == i &
+                                          all_model[,2] == model & 
+                                          all_model[,3] == 'precipitation' & 
+                                          all_model[,4] == seasons[s],6],na.rm=TRUE)
+  all_model_mean[i+skip,1+s] <- mean(all_model_freq[all_model_freq[,1] == i & 
+                                          all_model_freq[,6] == model,seasons[s]+1],na.rm=TRUE)
+  #                                       select either CESM or CMIP5 and the correct season column
+  all_model_mean[i+skip,5+s] <- mean(all_model_pers[all_model_pers[,1] == i & 
+                                          all_model_pers[,6] == model,seasons[s]+1],na.rm=TRUE)
+    }
+  }
+}
+
+# subset data, only choose W, SW, NW and N for the main figures in the manuscript
+# else for the supplementary material choose the remaining, rare circulation types
+if (main == 1){
+  # combine future W, SW, NW and N from both models
+  all_model <- all_model[all_model[,1] <= 4,]
+  all_model_pers <- all_model_pers[all_model_pers[,1] <= 4,]
+  all_model_freq <- all_model_freq[all_model_freq[,1] <= 4,]
+  all_model_mean <- all_model_mean[all_model_mean[,1] <= 4,]
+  # replace circulation type labels with actual alphabetic indices
+  # i.e. 'W', 'SW', 'NW', and 'N', etc.
+  #                          repeat circulation types two times, for CESM and CMIP5
+  all_model_mean[,1] <- rep(c('W','SW','NW','N'),2)
+  
+} else if (main == 0){
+  # combine future NE, E, SE, S, C and A from both models 
+  all_model <- all_model[all_model[,1] > 4,]
+  all_model_pers <- all_model_pers[all_model_pers[,1] > 4,]
+  all_model_freq <- all_model_freq[all_model_freq[,1] > 4,]
+  all_model_mean <- all_model_mean[all_model_mean[,1] > 4,]
+  all_model_mean[,1] <- rep(c('NE','E','SE','S','C','A'),2)
+  
+}
+# rename columns in frequency data frame
+colnames(all_model_freq)[2:5] <- c('spring','summer','autumn','winter')
+
+rm(CESM,CMIP5,CESM_spring_season,CESM_summer_season,CESM_autumn_season,CESM_winter_season,
+   CMIP5_spring_season,CMIP5_summer_season,CMIP5_autumn_season,CMIP5_winter_season,f1,f2,f3,f4,f5,f6,i)
+
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ plotting routine for all 8 subplots ~~~~~~~~~~~~~~~~~~~~~~~~ ########
+
+  xlabel <- c('Season','Season')
+
+  # subset correct data for that plot       persistence change
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for (i in 1:4){ # loop through the four data sets:
+                # - change in frequency     [%]     subplots (a) and (b)
+                # - change in persistence   [%]     subplots (c) and (d)
+                # - change in temperature   [°C]    subplots (e) and (f)
+                # - change in precipitation [%]     subplots (g) and (h)
+  for (e in 1:2){
+    if (e == 1){
+      colours = Blues[c(2,4,6,8)]
+    } else if (e == 2){
+      colours = Reds[c(2,4,6,8)]
+    }
+    
+    if (i == 1){ # for frequency subplots 
+      # ensemble data
+      data <- melt(all_model_freq[all_model_freq[,6]==e,], id=c('type', 'model_type'))
+      # model mean data
+      m_data <- all_model_mean[all_model_mean[,18]==e,c(1,2:5,18)]
+      plot_limits <- c(-40, 40); label_ticks <- 20
+      ylabel <- 'Change in \n frequency [%]'
+      caption <- c('a)', 'b)')
+      
+    } else if (i == 2){ # for persistence subplots 
+      # ensemble data
+      data <- melt(all_model_pers[all_model_pers[,6]==e,], id=c('type', 'model_type'))
+      # model mean data
+      m_data <- all_model_mean[all_model_mean[,18]==e,c(1,6:9,18)]
+      plot_limits <- c(-40, 40); label_ticks <- 20
+      ylabel <- 'Change in persistence [%]'
+      caption <- c('a) CESM', 'b) CMIP5')
+      
+    } else if (i == 3){ # for temperature subplots 
+    # ensemble data
+    data <- all_model[all_model[,2]==e & all_model[,3] == 'temperature',c(1,2,4,6)]
+    # model mean data
+    m_data <- all_model_mean[all_model_mean[,18]==e,c(1,10:13,18)]
+    plot_limits <- c(0, 10); label_ticks <- 2
+    ylabel <- 'Change in \n temperature [°C]'
+    caption <- c('c)', 'd)')
+    
+    } else if (i == 4){ # for precipitation subplots 
+    # ensemble data
+    data <- all_model[all_model[,2]==e & all_model[,3] == 'precipitation',c(1,2,4,6)]
+    # model mean data
+    m_data <- all_model_mean[all_model_mean[,18]==e,c(1,14:17,18)]
+    plot_limits <- c(-60, 60); label_ticks <- 20
+    ylabel <- 'Change in \n precipitation [%]'
+    caption <- c('e)', 'f)')
+  }
+    # plot_limits <- c(-40, 40); label_ticks <- 20
+    
+    
+    colnames(data)[3] <- c('season')
+    # replacing 'spring', 'summer', etc. strings with 1, 2, 3, 4 for seasons instead
+    data$season <- as.character(data$season)
+    
+    # model mean data
+    # m_data <- all_model_mean[all_model_mean[,18]==e,c(1,6:9,18)]
+    m_data[,1] <- 1:4; colnames(m_data)[c(2:5)] <- c('spring','summer','autumn','winter')
+    m_data <- melt(m_data, id=c('type', 'model_type')); colnames(m_data)[3] <- c('season')
+    m_data$season <- as.character(m_data$season)
+    
+    
+    # data <- melt(all_model_pers[all_model_pers[,6]==e,], id=c('type', 'model_type'))
+    
+    jahreszeiten <- c('spring','summer','autumn','winter')
+    for (s in 1:4){
+      data$season[data$season == jahreszeiten[s]] <- s
+      m_data$season[m_data$season == jahreszeiten[s]] <- s
+    }
+    data$season <- as.factor(data$season); m_data$season <- as.numeric(m_data$season)
+    
+
+  
+  
+    # g2 <- ggplot(data = data, aes(y = value, x = season)) + 
+    # geom_boxplot(aes(middle = mean(value),fill = interaction(type, model_type)))
+    # 
+    # g2
+    # 
+    
+    assign(paste("g",i,e, sep=""), ggplot(data = data, aes(y = value, x = season)) +     
+      geom_hline(yintercept=0, color = 'grey', size = .3) +
+      # boxplot from data which has the correct format
+      # interaction to plot both CESM and CMIP5 side by side next to each other for each
+      # circulation type
+      geom_boxplot(aes(fill = interaction(type, model_type)),color='grey', 
+                   outlier.shape=1, outlier.size = 1, alpha=.5,fatten=NULL) +
+    # I am really confused as stat summary and middle=mean does not give me the correct values!!!
+    #
+    # I have to be very careful here!!!!! 10. 07. 2019, 18:50 AEST
+    
+      # stat_summary(fun.y = mean, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..,group=type),
+      #                width = 0.25, size = 1, linetype = "solid") +
+      
+      geom_segment(data = m_data[m_data[,1]=='1',], 
+        aes(x=season-.36,y=value,xend=season-.2,yend=value), color='grey') + # W
+      geom_point(data = m_data[m_data[,1]=='1',], aes(x=season-.28,y=value),
+        color='white',pch=21,size=3,fill='black') + # W
+      geom_segment(data = m_data[m_data[,1]=='2',], 
+        aes(x=season-.18,y=value,xend=season-.005,yend=value), color='grey') + # SW
+      geom_point(data = m_data[m_data[,1]=='2',], aes(x=season-.10,y=value),
+        color='white',pch=21,size=3,fill='black') + # SW
+      geom_segment(data = m_data[m_data[,1]=='3',], 
+        aes(x=season+.18,y=value,xend=season+.005,yend=value), color='grey') + # SW
+      geom_point(data = m_data[m_data[,1]=='3',], aes(x=season+.10,y=value),
+        color='white',pch=21,size=3,fill='black') + # SW  
+      geom_segment(data = m_data[m_data[,1]=='4',], 
+        aes(x=season+.36,y=value,xend=season+.2,yend=value), color='grey') + # SW
+      geom_point(data = m_data[m_data[,1]=='4',], aes(x=season+.28,y=value),
+        color='white',pch=21,size=3,fill='black') + # SW   
+  
+      geom_line(data = m_data[m_data[,1]=='1',], aes(x=season-.28,y=value),
+        size = .3, color='black') +
+      geom_line(data = m_data[m_data[,1]=='2',], aes(x=season-.10,y=value),
+        size = .3, color='black') +
+      geom_line(data = m_data[m_data[,1]=='3',], aes(x=season+.10,y=value),
+        size = .3, color='black') +
+      geom_line(data = m_data[m_data[,1]=='4',], aes(x=season+.28,y=value),
+        size = .3, color='black') +
+    
+      scale_x_discrete(label = c('Spring', 'Summer','Autumn','Winter')) +
+      labs(x = xlabel[e], y = ylabel, colour = "grey") +
+      scale_fill_manual(values = colours, label = c('W', 'SW','NW','N')) + 
+      scale_y_continuous(breaks = seq(-100, 100, by = label_ticks), limits=plot_limits[c(1,2)],
+        sec.axis = dup_axis(labels=NULL, name=NULL)) +
+      scale_color_manual(values = c('#bb00bb', '#00bb00','grey'), guide = FALSE) +
+      ggtitle(caption[e])) # adding subtitle  
+  }
+  rm(data)
+} 
+# main plot for manuscript
+  dev.new()
+  figure <- ggarrange(g21,g22, ncol=2, nrow=1, widths = 1.5, heights = 1,legend="bottom", common.legend=TRUE)
+  annotate_figure(figure)
+  
+  # export as .png with specific filename
+  filename = paste('seasonal_variability_change_pers','_main_',main,'.png', sep="")
+  # export as a .pdf image
+  path_out <- 'E:/Praktikum MeteoSchweiz/figures/summary_figure/'
+  dev.copy(png, paste(path_out, filename, sep = "/"),
+           width = 12, height = 5, units = 'in', res = 600)
+  dev.off()
+
+# plot for supplementary information
+  dev.new()
+  figure <- ggarrange(g11,g12,g31,g32,g41,g42, ncol=2, nrow=3, widths = 1.5, heights = 1,legend="bottom", common.legend=TRUE)
+  annotate_figure(figure,
+  top = text_grob('       CESM                                                                    CMIP5', 
+                                  rot=0, size=20))
+  
+  # export as .png with specific filename
+  filename = paste('seasonal_variability_change_freq_temp_precip','_main_',main,'.png', sep="")
+  # export as a .pdf image
+  path_out <- 'E:/Praktikum MeteoSchweiz/figures/summary_figure/'
+  dev.copy(png, paste(path_out, filename, sep = "/"),
+           width = 12, height = 12, units = 'in', res = 600)
+  dev.off()  
+  
+  
+
+
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ CONSTRUCTION SITE (to add reanalysis 'climatology' on top) ~~~~~~~~~~~~~~~~~~~~~~~~ ########
+era_data <- melt(persist_ERA[1:4,], id='weather_type'); colnames(era_data) <- c('type','season','value')
+jahreszeiten <- c('spring','summer','autumn','winter')
+era_data$season <- as.character(era_data$season)
+
+for (s in 1:4){
+  era_data$season[era_data$season == jahreszeiten[s]] <- s
+  }
+era_data$season <- as.numeric(era_data$season)
+  
+
+assign(paste("g_era"), ggplot() +  
+  geom_point(data = m_data[m_data[,1]=='4',], aes(x=factor(season),y=c(-.5,-.5,-.5,-.5)),
+      color='white',pch=21,size=3,fill='white') + # SW   
+         
+  geom_line(data = era_data[era_data[,1]=='1',], aes(x=season-.28,y=value),
+     size = .3, color='black') +
+  geom_line(data = era_data[era_data[,1]=='2',], aes(x=season-.10,y=value),
+     size = .3, color='black') +
+  geom_line(data = era_data[era_data[,1]=='3',], aes(x=season+.10,y=value),
+     size = .3, color='black') +
+  geom_line(data = era_data[era_data[,1]=='4',], aes(x=season+.28,y=value),
+     size = .3, color='black') +
+         
+  geom_label(data = era_data[era_data[,1]=='1',], aes(x=season-.3,y=value,label='W'), 
+    color='white',fill='black',size=5,fontface='bold') + # shading, text colour and size of labels
+  geom_label(data = era_data[era_data[,1]=='2',], aes(x=season-.15,y=value,label='SW'), 
+    color='white',fill='black',size=5,fontface='bold') + # shading, text colour and size of labels
+  geom_label(data = era_data[era_data[,1]=='3',], aes(x=season+.15,y=value,label='NW'), 
+    color='white',fill='black',size=5,fontface='bold') + # shading, text colour and size of labels
+  geom_label(data = era_data[era_data[,1]=='4',], aes(x=season+.3,y=value,label='N'), 
+    color='white',fill='black',size=5,fontface='bold') + # shading, text colour and size of labels
+  # geom_text(aes(x=4.45, label="more persistent", y=-.4, hjust=1),
+  #   colour="black", angle=90, vjust = 1.2, size = 4.5) +
+  # geom_segment(aes(x = 4.45, y = -.65, xend = 4.45, yend = -.4),
+  #   size = .75, arrow = arrow(length = unit(0.03, "npc"))) +
+    
+    
+  
+  scale_x_discrete(label = c('Spring', 'Summer','Autumn','Winter')) +
+  labs(x = NULL, y = 'Persistence', colour = "grey") +
+  scale_fill_manual(values = colours, label = c('W', 'SW','NW','N')) + 
+  scale_y_continuous(breaks = seq(-1, -.4, by = .1)) +
+  scale_color_manual(values = c('#bb00bb', '#00bb00','grey'), guide = FALSE) +
+  ggtitle('a) ERA-40/-Interim')) # adding subtitle  
+
+  
+  
+# arranging all three plots in one figure
+# a) reanalysis climatology
+# b) CESM change in future
+# c) CMIP5 change in future
+  
+dev.new()
+figure <- ggarrange(g_era,ggarrange(g21,g22, ncol=2), nrow=2, widths = 1.5, heights = c(.7, 1),
+                    legend="bottom", common.legend=TRUE)
+annotate_figure(figure)
+
+# export as .png with specific filename
+filename = paste('seasonal_variability_persistence_with_era','_main_',main,'.png', sep="")
+# export as a .pdf image
+path_out <- 'E:/Praktikum MeteoSchweiz/figures/summary_figure/'
+dev.copy(png, paste(path_out, filename, sep = "/"),
+         width = 12, height = 8, units = 'in', res = 100)
+dev.off()  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
