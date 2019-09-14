@@ -19,8 +19,7 @@ future          <- c(2070, 2099) # 30 years
 nyears          <- future[2]-future[1] + 1 # number of years
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # choose classification method
-method <- 'Z500' # or method <- 'PSL'
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+method <- 'Z500' 
 ######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ preamble and data load in ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ########
 
 if (method == 'Z500'){
@@ -666,57 +665,58 @@ path <- 'E:/Praktikum MeteoSchweiz/figures/'
 dev.copy(png, paste(path, filename, sep = "/"), 
          width = 12, height = 7, units = 'in', res = 300)
 dev.off()
-# ######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ frequency table for summary figure ~~~~~~~~~~~~~~~~~~~~~~~~~ ########
-# 
-# # initiating data.frame where I put in my stuff
-# mean_freq_CESM <- data.frame(matrix(NA, nrow = 10, ncol = 9))
-# colnames(mean_freq_CESM) <- c("type", "spring_1", "summer_1", "autumn_1", "winter_1",
-#                               "spring_2", "summer_2", "autumn_2", "winter_2")
-# mean_freq_CESM[,1] <- 1:10 
-# 
-# mean_freq_CMIP5 <- mean_freq_CESM # copy-paste data frame structure
-# 
-# for (s in 1:4){ # loop over all four seasons
-#   for (i in 1:10){ # loop over all ten circulation types
-#     # subset data for specific type and season, then calculate ensemble mean and put value
-#     # into allocated mean_pers_CESM_data frame
-#     mean_freq_CESM[i,s+1] <- mean(count_CESM_1[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
-#     mean_freq_CMIP5[i,s+1] <- mean(count_CMIP5_1[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
-#     # for future period, we shift the data by four columns to have
-#     #      past           future
-#     # .............. | ..............
-#     # next to each other
-#     mean_freq_CESM[i,s+5] <- mean(count_CESM_2[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
-#     mean_freq_CMIP5[i,s+5] <- mean(count_CMIP5_2[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
-#   }
-# }
-# 
-# # clean up workspace
-# rm(all_model, all_model_f, CESM, CESM_1, CESM_2, CESM_f,
-#    CMIP5, CMIP5_1, CMIP5_2, CMIP5_f, data, ERA, figure, g1, g2, g3, g4, h1, h2, h3, h4, 
-#    axis_labels, i, s, reference, title, title_f, total, xlabel, ylabel)
-# 
-# 
-# # save variable for later import in summary figure script:
-# # 'OBS_CESM12-LE_CMIP5_summary_figure_all_parameters_combined.R'
-# 
-# # preparing percentage frequency changes for saving as R workspace
-# freq_perc_CESM <- (count_CESM_2 / (count_CESM_1 / 100) - 100)
-# freq_perc_CMIP5 <- (count_CMIP5_2 / (count_CMIP5_1 / 100) - 100)
-# freq_perc_CESM[,1] <- count_CESM_1[,1]   # replace again 1st column with correct data
-# freq_perc_CMIP5[,1] <- count_CMIP5_1[,1] # for all ten circulation types
-# 
-# # checking if what I do is correct
-# # calculate mean persistence change for westerly wind in summer
-# a <- freq_perc_CESM[freq_perc_CESM[,1]==1,3]; mean(a)  
-# b <- freq_perc_CMIP5[freq_perc_CMIP5[,1]==1,3]; mean(b)
-# 
-# 
-# 
-# # Save frequency data to file
-# path <- 'E:/Praktikum MeteoSchweiz/r_scripts/'
-# filename = paste('workspace_frequency_for_summary_figure_CESM_CMIP5')
-# save(mean_freq_CESM, mean_freq_CMIP5, freq_perc_CESM, freq_perc_CMIP5,
-#      file = paste(path, filename, '.RData',sep=''))
-# # Restore the object
-# # load(file = paste(path, filename, '.RData',sep=''))
+
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ frequency table for summary figure ~~~~~~~~~~~~~~~~~~~~~~~~~ ########
+
+# initiating data.frame where I put in my stuff
+mean_freq_CESM <- data.frame(matrix(NA, nrow = 10, ncol = 9))
+colnames(mean_freq_CESM) <- c("type", "spring_1", "summer_1", "autumn_1", "winter_1",
+                              "spring_2", "summer_2", "autumn_2", "winter_2")
+mean_freq_CESM[,1] <- 1:10
+
+mean_freq_CMIP5 <- mean_freq_CESM # copy-paste data frame structure
+
+for (s in 1:4){ # loop over all four seasons
+  for (i in 1:10){ # loop over all ten circulation types
+    # subset data for specific type and season, then calculate ensemble mean and put value
+    # into allocated mean_pers_CESM_data frame
+    mean_freq_CESM[i,s+1] <- mean(count_CESM_1[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
+    mean_freq_CMIP5[i,s+1] <- mean(count_CMIP5_1[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
+    # for future period, we shift the data by four columns to have
+    #      past           future
+    # .............. | ..............
+    # next to each other
+    mean_freq_CESM[i,s+5] <- mean(count_CESM_2[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
+    mean_freq_CMIP5[i,s+5] <- mean(count_CMIP5_2[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
+  }
+}
+
+# clean up workspace
+rm(all_model, all_model_f, CESM, CESM_1, CESM_2, CESM_f,
+   CMIP5, CMIP5_1, CMIP5_2, CMIP5_f, data, ERA, figure, g1, g2, g3, g4, h1, h2, h3, h4,
+   axis_labels, i, s, reference, title, title_f, total, xlabel, ylabel)
+
+
+# save variable for later import in summary figure script:
+# 'OBS_CESM12-LE_CMIP5_summary_figure_all_parameters_combined.R'
+
+# preparing percentage frequency changes for saving as R workspace
+freq_perc_CESM <- (count_CESM_2 / (count_CESM_1 / 100) - 100)
+freq_perc_CMIP5 <- (count_CMIP5_2 / (count_CMIP5_1 / 100) - 100)
+freq_perc_CESM[,1] <- count_CESM_1[,1]   # replace again 1st column with correct data
+freq_perc_CMIP5[,1] <- count_CMIP5_1[,1] # for all ten circulation types
+
+# checking if what I do is correct
+# calculate mean persistence change for westerly wind in summer
+a <- freq_perc_CESM[freq_perc_CESM[,1]==1,3]; mean(a)
+b <- freq_perc_CMIP5[freq_perc_CMIP5[,1]==1,3]; mean(b)
+
+
+
+# Save frequency data to file
+path <- 'E:/Praktikum MeteoSchweiz/r_scripts/'
+filename = paste('workspace_frequency_for_summary_figure_CESM_CMIP5')
+save(mean_freq_CESM, mean_freq_CMIP5, freq_perc_CESM, freq_perc_CMIP5,
+     file = paste(path, filename, '.RData',sep=''))
+# Restore the object
+# load(file = paste(path, filename, '.RData',sep=''))

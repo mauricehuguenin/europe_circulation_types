@@ -28,7 +28,7 @@ library(ggpubr)
 # choose whether to include either the first four most frequent circulation types or the rare ones
 main <- 1               # or main <- 0    (1 = yes; create figure with W, SW, NW and N)
                         #                 (0 = no; create figure with NE, E, SE, S, C and A)
-seasons <- c(2)       # or seasons <- (1,3)  (2, 4) = create plots for summer & winter season
+seasons <- c(2,4)       # or seasons <- (1,3)  (2, 4) = create plots for summer & winter season
                         #                      (1, 3) = create plots for spring & autumn season
 
 ######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ preamble and data load in ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ########
