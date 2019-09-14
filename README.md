@@ -1,5 +1,8 @@
 # europe_circulation_types
-Scripts used for my MeteoSwiss/ETH Zurich project titled __Assessing Changes in the Frequency and Persistence of Atmospheric Circulation Types Over Central Europe__
+Scripts used for my MeteoSwiss/ETH Zurich research assistant project titled __Assessing Changes in the Frequency and Persistence of Atmospheric Circulation Types Over Central Europe__
+
+Maurice F. Huguenin, Erich M. Fischer, Sven Kotlarski, Simon C. Scherrer, Cornelia Schwierz and Reto Knutti
+
 
 # Filename explanation
 
