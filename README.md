@@ -12,7 +12,7 @@ Maurice F. Huguenin, Erich M. Fischer, Sven Kotlarski, Simon C. Scherrer, Cornel
 - __preprocessing_cesm_maps_data.py__ and __preprocessing_cmip5_maps_data.py are the scripts used to prepare the raw model data sets for the circulation type maps in MATLAB (i.e. extracting Central European region, only selecting specific variables, only selecting 1980-2099 time period, ...)
 - Script for Fig. 3 includes the analysis for Fig. S6 as well
 
-# data folder
+# Data folder
 
 - __WTC_MCH_19570901-20180831.dat__ is the COST733class output file from the ERA-40/-Interim reanalysis product obtained from MeteoSwiss. The column 'wkwtg1d0' represents output obtained from the GWL method using geopotential height at 500 hPa and 10 circulation types (i.e. the data we used in this study)
 - __cost_CESM12-LE_historical_1960-2099_Z500.dat__ is the circulation type output file for the CESM data and likewise __cost_CMIP5_historical_rcp85_models_that_work.dat__ is the output for the CMIP5 models
