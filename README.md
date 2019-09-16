@@ -21,7 +21,13 @@ Maurice F. Huguenin, Erich M. Fischer, Sven Kotlarski, Simon C. Scherrer, Cornel
 COST733class classification output is given the following way:
 
 ```
-| YYYY | MM | DD | ens. member 1 | ens. member 2 | ens. member 3 | ...
+| YYYY | MM | DD | ens. member 1 | ens. member 2 | ens. member 3 | ... |
+| 1960 | 01 | 01 |       1       |       2       |       4       | ... |
+| 1960 | 01 | 02 |       1       |       1       |       3       | ... |
+| ... |  .. | .. |      ...      |      ...      |      ...      | ... |
+| 2017 | 12 | 31 |       1       |       4       |       3       | ... |
+
 ```
+where `1` is the westerly circulation type, `2`, north-westerly, `NaN` is a leap day, ... 
 
 More information on the CDO and COST733class commands can also be found in the Technical Appendix of the Supporting Information.
