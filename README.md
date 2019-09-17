@@ -24,7 +24,7 @@ COST733class classification output is given the following way:
 | YYYY | MM | DD | ens. member 1 | ens. member 2 | ens. member 3 | ... |
 | 1960 | 01 | 01 |       1       |       2       |       4       | ... |
 | 1960 | 01 | 02 |       1       |       1       |       3       | ... |
-| .... |  .. | .. |      ...      |      ...      |      ...      | ... |
+| .... | .. | .. |      ...      |      ...      |      ...      | ... |
 | 2099 | 12 | 31 |       1       |       4       |       3       | ... |
 
 ```
