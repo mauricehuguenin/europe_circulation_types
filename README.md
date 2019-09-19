@@ -1,12 +1,12 @@
 # europe_circulation_types
 Scripts used for my MeteoSwiss/ETH Zurich research assistant project: __Assessing Changes in the Frequency and Persistence of Atmospheric Circulation Types Over Central Europe__
 
-Maurice F. Huguenin^(1,2,3), Erich M. Fischer^1, Sven Kotlarski^2, Simon C. Scherrer^2, Cornelia Schwierz^2 and Reto Knutti^1
+Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Scherrer(2), Cornelia Schwierz(2) and Reto Knutti(1)
 
 
-^1 Institute for Atmospheric and Climate Science, ETH Zurich, 8092 Zurich, Switzerland 5 
-^2 Federal Office of Meteorology and Climatology, MeteoSwiss, 8058 Zurich, Switzerland 6 
-^3 Now at Climate Change Research Centre and ARC Centre of Excellence for Climate 7 Extremes, University of New South Wales, New South Wales 2052, Australia 
+1 Institute for Atmospheric and Climate Science, ETH Zurich, 8092 Zurich, Switzerland 5 
+2 Federal Office of Meteorology and Climatology, MeteoSwiss, 8058 Zurich, Switzerland 6 
+3 Now at Climate Change Research Centre and ARC Centre of Excellence for Climate 7 Extremes, University of New South Wales, New South Wales 2052, Australia 
 
 # Filename explanation
 
