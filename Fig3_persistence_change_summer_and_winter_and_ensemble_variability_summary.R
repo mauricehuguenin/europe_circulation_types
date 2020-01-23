@@ -383,7 +383,7 @@ for (i in 1:4){ # loop through the four data sets:
       # model mean data
       m_data <- all_model_mean[all_model_mean[,18]==e,c(1,2:5,18)]
       plot_limits <- c(-40, 40); label_ticks <- 20
-      ylabel <- 'Change in \n frequency [%]'
+      ylabel <- 'Change in \n frequency (%)'
       caption <- c('a)', 'b)')
       
     } else if (i == 2){ # for persistence subplots 
@@ -392,7 +392,7 @@ for (i in 1:4){ # loop through the four data sets:
       # model mean data
       m_data <- all_model_mean[all_model_mean[,18]==e,c(1,6:9,18)]
       plot_limits <- c(-40, 40); label_ticks <- 20
-      ylabel <- 'Change in persistence [%]'
+      ylabel <- 'Change in persistence (%)'
       caption <- c('a) CESM', 'b) CMIP5')
       
     } else if (i == 3){ # for temperature subplots 
@@ -401,7 +401,7 @@ for (i in 1:4){ # loop through the four data sets:
     # model mean data
     m_data <- all_model_mean[all_model_mean[,18]==e,c(1,10:13,18)]
     plot_limits <- c(0, 10); label_ticks <- 2
-    ylabel <- 'Change in \n temperature [°C]'
+    ylabel <- 'Change in \n temperature (°C)'
     caption <- c('c)', 'd)')
     
     } else if (i == 4){ # for precipitation subplots 
@@ -410,7 +410,7 @@ for (i in 1:4){ # loop through the four data sets:
     # model mean data
     m_data <- all_model_mean[all_model_mean[,18]==e,c(1,14:17,18)]
     plot_limits <- c(-60, 60); label_ticks <- 20
-    ylabel <- 'Change in \n precipitation [%]'
+    ylabel <- 'Change in \n precipitation (%)'
     caption <- c('e)', 'f)')
   }
     # plot_limits <- c(-40, 40); label_ticks <- 20
@@ -475,16 +475,27 @@ for (i in 1:4){ # loop through the four data sets:
         aes(x=season+.36,y=value,xend=season+.2,yend=value), color='grey') + # SW
       geom_point(data = m_data[m_data[,1]=='4',], aes(x=season+.28,y=value),
         color='white',pch=21,size=3,fill='black') + # SW   
-  
+      
       geom_line(data = m_data[m_data[,1]=='1',], aes(x=season-.28,y=value),
-        size = .3, color='black') +
+                size = .6, color='white') +
+      geom_line(data = m_data[m_data[,1]=='1',], aes(x=season-.28,y=value),
+                size = .5, color=colours[1]) +
       geom_line(data = m_data[m_data[,1]=='2',], aes(x=season-.10,y=value),
-        size = .3, color='black') +
+                size = .6, color='white') +
+      geom_line(data = m_data[m_data[,1]=='2',], aes(x=season-.10,y=value),
+                size = .5, color=colours[2]) +
       geom_line(data = m_data[m_data[,1]=='3',], aes(x=season+.10,y=value),
-        size = .3, color='black') +
+                size = .6, color=colours[3]) +
+      geom_line(data = m_data[m_data[,1]=='3',], aes(x=season+.10,y=value),
+                size = .5, color=colours[3]) +
       geom_line(data = m_data[m_data[,1]=='4',], aes(x=season+.28,y=value),
-        size = .3, color='black') +
-    
+                size = .6, color='white') +
+      geom_line(data = m_data[m_data[,1]=='4',], aes(x=season+.28,y=value),
+                size = .5, color=colours[4]) +
+      
+      # zero line to distinguish between positive and negative change
+      # geom_hline(yintercept=0, color = 'black', size = .3) +
+      
       scale_x_discrete(label = c('Spring', 'Summer','Autumn','Winter')) +
       labs(x = xlabel[e], y = ylabel, colour = "grey") +
       scale_fill_manual(values = colours, label = c('W', 'SW','NW','N')) + 
