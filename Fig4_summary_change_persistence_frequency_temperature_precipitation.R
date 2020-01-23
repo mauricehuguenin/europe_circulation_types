@@ -8,7 +8,7 @@
 # Project:  Practicum MeteoSwiss/ETH Zurich                                                     #
 #           Frequency and Persistence of Central European Circulation Types                     #
 # My Name:  Maurice Huguenin-Virchaux                                                           #
-# My Email: hmaurice@student.ethz.ch                                                            #
+# My Email: m.huguenin-virchaux@unsw.edu.au                                                     #
 # Date:     19.03.2019, 10:12 CET                                                               #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # library(latex2exp) # package for LaTeX font in plots

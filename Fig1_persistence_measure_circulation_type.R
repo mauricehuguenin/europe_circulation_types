@@ -1,9 +1,12 @@
 # Practicum MeteoSwiss:  Analysis of persistent (i.e. consecutive) circulation types in 
 #                       ERA-40/-Interim, CESM and CMIP5
-# 
-# Maurice Huguenin-Virchaux, 16. 10. 2018, 12:27 CET
-# hmaurice@student.ethz.ch
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+# Project:  Practicum MeteoSwiss/ETH Zurich                                                     #
+#           Frequency and Persistence of Central European Circulation Types                     #
+# My Name:  Maurice Huguenin-Virchaux                                                           #
+# My Email: m.huguenin-virchaux@unsw.edu.au                                                     #
+# Date:     16.10.2018, 12:27 CET                                                               #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 library(base)
 library(ggplot2) # for plotting
 library(reshape)
