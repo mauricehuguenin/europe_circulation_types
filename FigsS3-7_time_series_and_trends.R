@@ -1,5 +1,5 @@
 # Purpose:  Plot time series of frequency of seasonal circulation types 
-# each year, their linear trend with slope and pvalue indices throughout 1988-2017
+# each year, their linear trend with slope and pvalue indices throughout 1960-2100 and
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # Project:  Practicum MeteoSwiss/ETH Zurich                                                     #
 #           Frequency and Persistence of Central European Circulation Types                     #
@@ -56,14 +56,12 @@ theme_set(theme_bw() +
 Reds <- brewer.pal(9, "Reds")      # red colour scale with 9 entries
 Blues <- brewer.pal(9, "Blues")    # blue colour scale with 9 entries
 
-# cseason <- c('#AFD145', '#EE2926', '#8E1C1C', '#4892D2')
-# season_light <- c('#7fcf7f', '#ff9e9e', '#ca7f88', '#967fe3')
-# season_dark <- c('#00a000', '#FF3D3D', '#960011', '#2D00C8')
-# season_dark <- c("lightgreen", "red", "darkred", "blue")
-# cseason_trans[1] <- rgb(175,209,69,0.5) # transparent colours
-# cseason_trans[2] <- rgb(238, 41, 38, 0.5)
-# cseason_trans[3] <- rgb(142, 28, 28, 0.5)
-# cseason_trans[4] <- rgb(72, 151, 210, 0.5)
+antarctica <- c('#960011', '#A50021', '#C80028', 
+                '#D8152F', '#F72735', '#FF3D3D', '#FF7856', 
+                '#FFAC75', '#FFD699', '#FFF1BC', '#BCF9FF', 
+                '#99EAFF', '#75D3FF', '#56B0FF', '#3D87FF', 
+                '#2857FF', '#181CF7', '#1E00E6', '#2400D8', 
+                '#2D00C8') # antarctica colour map going from turquise -> blue
 
 ######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ load in reanalysis data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ########
 
@@ -317,7 +315,7 @@ rm(a, bins_CMIP5, trends_CMIP5, trends_CMIP5_loop, bins_CMIP5_loop,
 
 
 
-######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ plotting routine for time series subplots and trends ~~~~ ########
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ plotting routine for time series subplots and trends ~~~~~~ ########
 library(ggplot2)
 library(grid)
 library(gridExtra)
@@ -335,9 +333,20 @@ lm_beta <- function(array){                                                     
   as.character(as.expression(eq));                                                             #  
 }                                                                                              #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+lm_pval <- function(array){                                                                    #
+  m <- lm(array[,2] ~ array[,1]);                                                              #
+  eq <- substitute('ERA-40/-Interim trend'~"="~b*" days/decade,"~'pval'~"="~pval,              #
+                   list(rvalue = sprintf("%.2f",sign(coef(m)[2])*sqrt(summary(m)$r.squared)),  #
+                        b = format(summary(m)$coefficients[2,1]*10, digits = 2),               #
+                        # multiply by *3 to get trend per decade instead of trend over the     #
+                        # full 38 years                                                        #
+                        pval = format(summary(m)$coefficients[2,4], digits = 2)))              #
+  as.character(as.expression(eq));                                                             #  
+}                                                                                              #
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 # preliminary plotting
-for (s in c(2,4)){ # loop over seasons -> c(2,4) = summer and winter seasons
+for (s in 1:4){ # loop over seasons -> c(2,4) = summer and winter seasons
   for (i in 1:4){ # loop over all weather pattern
       
       # assign ERA data
@@ -346,9 +355,6 @@ for (s in c(2,4)){ # loop over seasons -> c(2,4) = summer and winter seasons
       CESM <- bins_CESM_all[bins_CESM_all[,12] == s, c(1,i+1,12)]
       CMIP5 <- bins_CMIP5_all[bins_CMIP5_all[,12] == s, c(1,i+1,12)]
       
-        beta_1 <- ''
-        beta_2 <- lm_beta(ERA[ERA[,1]>=1988 & ERA[,1]<=2017,c(1,2)])
-        pval_1 <- ''
         pval_2 <- lm_pval(ERA[ERA[,1]>=1988 & ERA[,1]<=2017,c(1,2)])
         trend_colour <- c(NULL, 'black')
 
@@ -423,22 +429,45 @@ for (s in c(2,4)){ # loop over seasons -> c(2,4) = summer and winter seasons
                labs(x='Year',y='Frequency (days)', colour = "grey") + 
                ggtitle(paste(title_string_l[i])) + 
                # add past trend for the reanalyis data
-               geom_smooth(data=ERA[ERA[,1]>=past[1] & ERA[,1]<=past[2],],aes(x=period,y=value),linetype='dashed',method="lm",se=FALSE,
+               geom_smooth(data=ERA[29:58,c(1,2)],aes(x=period,y=value),linetype='dashed',method="lm",se=FALSE,
                             colour=trend_colour[1],size=1) +
                # add the text to the top left from the p-value analysis above
                annotate("text",label=pval_2,x=1988,y=63,size=4,colour="black",parse=TRUE,hjust=0))
   }
 }
 
+# ~~~~~~~~~~~~ Save SPRING figure ~~~~~~~~~~~~ #
+dev.new()
+# combine the four subplots: g11 = the subplot for the (1) spring season and the (1) westerly circulaton type, hence the '11' label
+figure <- ggarrange(g11,g12,g13,g14,ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
+annotate_figure(figure, top = text_grob('Spring', size=20))
+# print(figure)
+# export as .png with specific filename
+filename = paste('time_series_and_trends_revision_spring.png', sep="")
+# # export as a .pdf image
+path <- 'E:/Praktikum MeteoSchweiz/figures/'
+dev.copy(png, paste(path, filename, sep = "/"), 
+         width = 16, height = 9, units = 'in', res = 300)
+dev.off()
 # ~~~~~~~~~~~~ Save SUMMER figure ~~~~~~~~~~~~ #
 dev.new()
-# combine the four subplots: g21 = the subplot for the (2) summer season and the (1) westerly circulaton type, hence the '21' label
 figure <- ggarrange(g21,g22,g23,g24,ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
-annotate_figure(figure, 
-                 top = text_grob('Summer', size=20))
+annotate_figure(figure, top = text_grob('Summer', size=20))
 # print(figure)
 # export as .png with specific filename
 filename = paste('time_series_and_trends_revision_summer.png', sep="")
+# # export as a .pdf image
+path <- 'E:/Praktikum MeteoSchweiz/figures/'
+dev.copy(png, paste(path, filename, sep = "/"), 
+         width = 16, height = 9, units = 'in', res = 300)
+dev.off()
+# ~~~~~~~~~~~~ Save Autumn figure ~~~~~~~~~~~~ #
+dev.new()
+figure <- ggarrange(g31,g32,g33,g34,ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
+annotate_figure(figure, top = text_grob('Autumn', size=20))
+# print(figure)
+# export as .png with specific filename
+filename = paste('time_series_and_trends_revision_autumn.png', sep="")
 # # export as a .pdf image
 path <- 'E:/Praktikum MeteoSchweiz/figures/'
 dev.copy(png, paste(path, filename, sep = "/"), 
@@ -448,8 +477,7 @@ dev.off()
 dev.new()
 # only combine summer and winter season as of 07. 02. 2019m 09:13 CET
 figure <- ggarrange(g41,g42,g43,g44,ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
-annotate_figure(figure, 
-                top = text_grob('Winter', size=20))
+annotate_figure(figure, top = text_grob('Winter', size=20))
 # print(figure)
 # export as .png with specific filename
 filename = paste('time_series_and_trends_revision_winter.png', sep="")
@@ -463,7 +491,7 @@ dev.off()
 rm(figure, filename, colours, overhead_title, path, s, 
    xlabel, ylabel, y)
 
-######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ plotting routine boxplots of trends with ERA data as a bullet point ~~~~~~~~~~~~~ ########
+######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ plotting routine boxplots of trends  ~~~~~~~~~~~~~~~~~~~~~~ ########
 
 library(ggplot2)
 library(grid)
@@ -509,17 +537,17 @@ for (s in 1:4){ # loop over the four seasons; assign correct data each loop iter
            # plot whiskers and error bars
            # stat_boxplot(data = all_model, aes(x=type, y=value, group=type), geom ='errorbar', width = 0.3) + 
            # boxplot from data which has the correct format
-           geom_boxplot(data = all_model[all_model[,1]<=4,], aes(x=type, y=value*10/3, fill = interaction(type, ensemble_type), 
+           geom_boxplot(data = all_model[all_model[,1]<=4,], aes(x=type, y=value*10, fill = interaction(type, ensemble_type), 
                                               middle = mean(value)), outlier.shape=1, outlier.size = 1) +
            # black dots where Era40/-Interim is
            # geom_boxplot(data = CMIP5, aes(x=type, y=value, group=type, fill=antarctica[5], middle = mean(value)), outlier.shape=1, outlier.size = 1) +
            # black dots where Era40/-Interim is
-           geom_point(data = ERA[c(1:4),], aes(x=type, y=value/3*10, colour = "black"), size = 3, shape = 16) +
+           geom_point(data = ERA[c(1:4),], aes(x=type, y=value*10, colour = "black"), size = 3, shape = 16) +
            # replace labels on x-axis
            scale_x_continuous(breaks=seq(1, 10, by = 1),
                               labels=c("W","SW","NW","N","NE","E","SE","S","C","A")) +
            # adjusted scale for y-axis
-           scale_y_continuous(breaks = seq(-5,5, by = 1), limits = c(-2,2)) + 
+           scale_y_continuous(breaks = seq(-5,5, by = 1), limits = c(-3.3,3)) + 
            # labels; no label on x-axis since it's the same as in lower subplot
            labs(x = 'Circulation type', y = 'Trend in frequency (days/decade)', colour = "grey") +
            geom_hline(yintercept=0, color = 'grey', size = .3) + # horizontal line
