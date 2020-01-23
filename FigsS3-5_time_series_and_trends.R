@@ -1,11 +1,11 @@
 # Purpose:  Plot time series of frequency of seasonal circulation types 
-# each year, their linear trend with slope and pvalue indices throughout 1960-2100 and
+# each year, their linear trend with slope and pvalue indices throughout 1988-2017
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # Project:  Practicum MeteoSwiss/ETH Zurich                                                     #
 #           Frequency and Persistence of Central European Circulation Types                     #
 # My Name:  Maurice Huguenin-Virchaux                                                           #
-# My Email: hmaurice@student.ethz.ch                                                            #
-# Date:     19.03.2019, 13:15 CET                                                               #
+# My Email: m.huguenin-virchaux@unsw.edu.au                                                     #
+# Date:     23.01.2020, 16:24 AEDT                                                              #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # library(latex2exp) # package for LaTeX font in plots
 library(base)
