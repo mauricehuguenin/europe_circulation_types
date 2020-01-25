@@ -22,8 +22,10 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 # Data folder
 
 - __WTC_MCH_19570901-20180831.dat__ is the COST733class output file from the ERA-40/-Interim reanalysis product obtained from MeteoSwiss. The column 'wkwtg1d0' represents output obtained from the GWL method using geopotential height at 500 hPa and 10 circulation types (i.e. the data we used in this study)
-- __cost_CESM12-LE_historical_1960-2099_Z500.dat__ is the circulation type output file for the CESM data and likewise __cost_CMIP5_historical_rcp85_models_that_work.dat__ is the output for the CMIP5 models
-- the two workspaces (.RData) contain the frequency and persistence changes 
+- __cost_CESM12-LE_historical_rcp85_1960-2099_Z500.dat__ is the COST733class classification output for the CESM data using geopotential height fields at 500 hPa
+- __cost_CMIP5_historical_rcp85_1960-2099_Z500.dat__ is the COST733class classification output for the CMIP5 data using geopotential height fields at 500 hPa
+- __cost_CESM12-LE_historical_rcp85_1960-2099_PSL.dat__ is the COST733class classification output for the CESM data using sea level pressure fields
+- __cost_CMIP5_historical_rcp85_1960-2099_PSL.dat__ is the COST733class classification output for the CMIP5 data using sea level pressure fields __<span style="color:red">ACHTUNG, andere Modelle als in Supporting Information, Table S1. Check with editor letter sceen snap!!!</span>
 - __date.dat__ and __date_no_leap_days.dat__ contain the first three columns with YYYY | MM | DD data for a period with leap days and without leap days
 
 COST733class classification output is given the following way:
