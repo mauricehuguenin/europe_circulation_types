@@ -5,7 +5,7 @@
 # Project:  Practicum MeteoSwiss/ETH Zurich                                                     #
 #           Frequency and Persistence of Central European Circulation Types                     #
 # My Name:  Maurice Huguenin-Virchaux                                                           #
-# My Email: m.huguenin-virchaux@unsw.edu.au                                                     #
+# My Email: hmaurice@student.ethz.ch                                                            #
 # Date:     16.10.2018, 11:59 CET                                                               #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # library(latex2exp) # package for LaTeX font in plots
@@ -19,7 +19,9 @@ future          <- c(2070, 2099) # 30 years
 nyears          <- future[2]-future[1] + 1 # number of years
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # choose classification method
-method <- 'Z500' 
+#method <- 'Z500' # or 
+method <- 'PSL'
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ preamble and data load in ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ########
 
 if (method == 'Z500'){
@@ -29,7 +31,7 @@ if (method == 'Z500'){
 }
 cesm_data <- paste('E:/Praktikum MeteoSchweiz/cost_files/cost_CESM12-LE_historical_1960-2099_',method,'.dat', sep="")
 # that's the data with all ensembles that work
-cmip5_data <- paste('E:/Praktikum MeteoSchweiz/cost_files/cost_CMIP5_historical_rcp85_models_that_work.dat')
+cmip5_data <- paste('E:/Praktikum MeteoSchweiz/cost_files/cost_CMIP5_historical_rcp85_models_that_work_',method,'.dat',sep="")
 
 # adapting ggplot theme to suit my needs
 theme_set(theme_bw() + 
@@ -617,7 +619,7 @@ assign(paste("h",s, sep=""), ggplot() +
   geom_segment(data = all_model_mean_future_line[all_model_mean_future_line[,2]=='2',],
     aes(x=type+.01,y=value,xend=type+.37,yend=value), color='black') +
     
-  geom_hline(yintercept=0, color = 'grey', size = .3) +
+  geom_hline(yintercept=0, color = 'black', size = .3) +
   # geom_hline(yintercept=-8, color = 'white', size = .3) +
   # geom_segment(mapping=aes(x=4.5, y=-8, xend=Inf, yend=-8), 
   #   size=.3, color='grey') +     
@@ -638,85 +640,84 @@ assign(paste("h",s, sep=""), ggplot() +
 
 # combine SUMMER and WINTER season for plot in main manuscript
 dev.new()
-figure <- ggarrange(g2,g4,h2,h4, heights=c(1.6, 1),ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
+figure <- ggarrange(g2,g4,h2,h4, heights=c(1.3, 1),ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
 annotate_figure(figure, 
-                left = text_grob("Frequency of circulation type [days]", rot=90, size=20),
+                left = text_grob("Frequency (days per season)", rot=90, size=20),
                 top = text_grob(
 'Summer                                                                Winter', size=20))
 # export as .png with specific filename
- filename = paste('frequencies_summer_winter.png', sep="")
+ filename = paste('frequencies_summer_winter_',method,'.png', sep="")
 # # export as a .pdf image
 path <- 'E:/Praktikum MeteoSchweiz/figures/'
 dev.copy(png, paste(path, filename, sep = "/"), 
-        width = 12, height = 7, units = 'in', res = 300)
+        width = 12, height = 9, units = 'in', res = 500)
 dev.off()
 
 # combine SPRING and AUTUMN season for plot in supporting material
 dev.new()
 figure <- ggarrange(g1,g3,h1,h3, heights=c(1.6, 1),ncol=2, nrow=2, legend="bottom", common.legend=TRUE)
 annotate_figure(figure, 
-                left = text_grob("Frequency of circulation type [days]", rot=90, size=20),
+                left = text_grob("Frequency [days per season]", rot=90, size=20),
                 top = text_grob(
                   'Spring                                                                Autumn', size=20))
 # export as .png with specific filename
-filename = paste('frequencies_spring_autumn.png', sep="")
+filename = paste('frequencies_spring_autumn_',method,'.png', sep="")
 # # export as a .pdf image
 path <- 'E:/Praktikum MeteoSchweiz/figures/'
 dev.copy(png, paste(path, filename, sep = "/"), 
-         width = 12, height = 7, units = 'in', res = 300)
+         width = 12, height = 7, units = 'in', res = 500)
 dev.off()
-
-######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ frequency table for summary figure ~~~~~~~~~~~~~~~~~~~~~~~~~ ########
-
-# initiating data.frame where I put in my stuff
-mean_freq_CESM <- data.frame(matrix(NA, nrow = 10, ncol = 9))
-colnames(mean_freq_CESM) <- c("type", "spring_1", "summer_1", "autumn_1", "winter_1",
-                              "spring_2", "summer_2", "autumn_2", "winter_2")
-mean_freq_CESM[,1] <- 1:10
-
-mean_freq_CMIP5 <- mean_freq_CESM # copy-paste data frame structure
-
-for (s in 1:4){ # loop over all four seasons
-  for (i in 1:10){ # loop over all ten circulation types
-    # subset data for specific type and season, then calculate ensemble mean and put value
-    # into allocated mean_pers_CESM_data frame
-    mean_freq_CESM[i,s+1] <- mean(count_CESM_1[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
-    mean_freq_CMIP5[i,s+1] <- mean(count_CMIP5_1[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
-    # for future period, we shift the data by four columns to have
-    #      past           future
-    # .............. | ..............
-    # next to each other
-    mean_freq_CESM[i,s+5] <- mean(count_CESM_2[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
-    mean_freq_CMIP5[i,s+5] <- mean(count_CMIP5_2[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
-  }
-}
-
-# clean up workspace
-rm(all_model, all_model_f, CESM, CESM_1, CESM_2, CESM_f,
-   CMIP5, CMIP5_1, CMIP5_2, CMIP5_f, data, ERA, figure, g1, g2, g3, g4, h1, h2, h3, h4,
-   axis_labels, i, s, reference, title, title_f, total, xlabel, ylabel)
-
-
-# save variable for later import in summary figure script:
-# 'OBS_CESM12-LE_CMIP5_summary_figure_all_parameters_combined.R'
-
-# preparing percentage frequency changes for saving as R workspace
-freq_perc_CESM <- (count_CESM_2 / (count_CESM_1 / 100) - 100)
-freq_perc_CMIP5 <- (count_CMIP5_2 / (count_CMIP5_1 / 100) - 100)
-freq_perc_CESM[,1] <- count_CESM_1[,1]   # replace again 1st column with correct data
-freq_perc_CMIP5[,1] <- count_CMIP5_1[,1] # for all ten circulation types
-
-# checking if what I do is correct
-# calculate mean persistence change for westerly wind in summer
-a <- freq_perc_CESM[freq_perc_CESM[,1]==1,3]; mean(a)
-b <- freq_perc_CMIP5[freq_perc_CMIP5[,1]==1,3]; mean(b)
-
-
-
-# Save frequency data to file
-path <- 'E:/Praktikum MeteoSchweiz/r_scripts/'
-filename = paste('workspace_frequency_for_summary_figure_CESM_CMIP5')
-save(mean_freq_CESM, mean_freq_CMIP5, freq_perc_CESM, freq_perc_CMIP5,
-     file = paste(path, filename, '.RData',sep=''))
-# Restore the object
-# load(file = paste(path, filename, '.RData',sep=''))
+# ######## ~~~~~~~~~~~~~~~~~~~~~~~~~~ frequency table for summary figure ~~~~~~~~~~~~~~~~~~~~~~~ ########
+# 
+# # initiating data.frame where I put in my stuff
+# mean_freq_CESM <- data.frame(matrix(NA, nrow = 10, ncol = 9))
+# colnames(mean_freq_CESM) <- c("type", "spring_1", "summer_1", "autumn_1", "winter_1",
+#                               "spring_2", "summer_2", "autumn_2", "winter_2")
+# mean_freq_CESM[,1] <- 1:10 
+# 
+# mean_freq_CMIP5 <- mean_freq_CESM # copy-paste data frame structure
+# 
+# for (s in 1:4){ # loop over all four seasons
+#   for (i in 1:10){ # loop over all ten circulation types
+#     # subset data for specific type and season, then calculate ensemble mean and put value
+#     # into allocated mean_pers_CESM_data frame
+#     mean_freq_CESM[i,s+1] <- mean(count_CESM_1[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
+#     mean_freq_CMIP5[i,s+1] <- mean(count_CMIP5_1[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
+#     # for future period, we shift the data by four columns to have
+#     #      past           future
+#     # .............. | ..............
+#     # next to each other
+#     mean_freq_CESM[i,s+5] <- mean(count_CESM_2[count_CESM_1[,1]==i,s+1],na.rm=TRUE)
+#     mean_freq_CMIP5[i,s+5] <- mean(count_CMIP5_2[count_CMIP5_1[,1]==i,s+1],na.rm=TRUE)
+#   }
+# }
+# 
+# # clean up workspace
+# rm(all_model, all_model_f, CESM, CESM_1, CESM_2, CESM_f,
+#    CMIP5, CMIP5_1, CMIP5_2, CMIP5_f, data, ERA, figure, g1, g2, g3, g4, h1, h2, h3, h4, 
+#    axis_labels, i, s, reference, title, title_f, total, xlabel, ylabel)
+# 
+# 
+# # save variable for later import in summary figure script:
+# # 'OBS_CESM12-LE_CMIP5_summary_figure_all_parameters_combined.R'
+# 
+# # preparing percentage frequency changes for saving as R workspace
+# freq_perc_CESM <- (count_CESM_2 / (count_CESM_1 / 100) - 100)
+# freq_perc_CMIP5 <- (count_CMIP5_2 / (count_CMIP5_1 / 100) - 100)
+# freq_perc_CESM[,1] <- count_CESM_1[,1]   # replace again 1st column with correct data
+# freq_perc_CMIP5[,1] <- count_CMIP5_1[,1] # for all ten circulation types
+# 
+# # checking if what I do is correct
+# # calculate mean persistence change for westerly wind in summer
+# a <- freq_perc_CESM[freq_perc_CESM[,1]==1,3]; mean(a)  
+# b <- freq_perc_CMIP5[freq_perc_CMIP5[,1]==1,3]; mean(b)
+# 
+# 
+# 
+# # Save frequency data to file
+# path <- 'E:/Praktikum MeteoSchweiz/r_scripts/'
+# filename = paste('workspace_frequency_for_summary_figure_CESM_CMIP5')
+# save(mean_freq_CESM, mean_freq_CMIP5, freq_perc_CESM, freq_perc_CMIP5,
+#      file = paste(path, filename, '.RData',sep=''))
+# # Restore the object
+# # load(file = paste(path, filename, '.RData',sep=''))
