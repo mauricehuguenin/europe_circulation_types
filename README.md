@@ -17,7 +17,8 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 - __merging_cmip5.py__ and __preprocessing_cesm.py__ are basically the same scripts but for the two model data sets and show the preprocessing of the raw output files in order for use in cost733class. See also the documentation in the Supporting Information, Section 2
 - __preprocessing_cesm_maps_data.py__ and __preprocessing_cmip5_maps_data.py__ are the scripts used to prepare the raw model data sets for the circulation type maps in MATLAB (i.e. extracting Central European region, only selecting specific variables, only selecting 1980-2099 time period, ...)
 - Script for Fig. 3 includes the analysis for Fig. S6 as well
-- Script for Figs. S3-7 includes the analysis of past time series and trends for the four main circulation types.
+- Script for Figs. S3-7 includes the analysis of past time series and trends for the four main circulation types
+- date.dat and date_no_leap_days.dat contain data for the year|month|day between 1960-2099 *UPDATE*
 
 # Data folder
 
