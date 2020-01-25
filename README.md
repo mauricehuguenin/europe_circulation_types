@@ -18,13 +18,13 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 - __preprocessing_cesm_maps_data.py__ and __preprocessing_cmip5_maps_data.py__ are the scripts used to prepare the raw model data sets for the circulation type maps in MATLAB (i.e. extracting Central European region, only selecting specific variables, only selecting 1980-2099 time period, ...)
 - Script for Fig. 3 includes the analysis for Fig. S6 as well
 - Script for Figs. S3-7 includes the analysis of past time series and trends for the four main circulation types
-- date.dat and date_no_leap_days.dat contain data for the year|month|day between 1960-2099 *UPDATE*
 
 # Data folder
 
 - __WTC_MCH_19570901-20180831.dat__ is the COST733class output file from the ERA-40/-Interim reanalysis product obtained from MeteoSwiss. The column 'wkwtg1d0' represents output obtained from the GWL method using geopotential height at 500 hPa and 10 circulation types (i.e. the data we used in this study)
 - __cost_CESM12-LE_historical_1960-2099_Z500.dat__ is the circulation type output file for the CESM data and likewise __cost_CMIP5_historical_rcp85_models_that_work.dat__ is the output for the CMIP5 models
-- the two workspaces contain the frequency and persistence changes 
+- the two workspaces (.RData) contain the frequency and persistence changes 
+- date.dat and date_no_leap_days.dat contain the first three columns with YYYY | MM | DD data for a period with leap days and without leap days
 
 COST733class classification output is given the following way:
 
