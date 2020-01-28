@@ -26,6 +26,7 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 - __cost_CMIP5_historical_rcp85_1960-2099_Z500.dat__ is the COST733class classification output for the CMIP5 data using geopotential height fields at 500 hPa
 - __cost_CESM12-LE_historical_rcp85_1960-2099_PSL.dat__ is the COST733class classification output for the CESM data using sea level pressure fields
 - __cost_CMIP5_historical_rcp85_1960-2099_PSL.dat__ is the COST733class classification output for the CMIP5 data using sea level pressure fields 
+- __cost_CMIP5_historical_rcp85_1960-2099_uas.dat__ is the COST733class classification output for the CMIP5 data using eastward near-surface wind as input
 
 ## __ACHTUNG, andere Modelle als in Supporting Information, Table S1. Check with editor letter sceen snap!!!!__
 
