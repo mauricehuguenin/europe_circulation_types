@@ -24,7 +24,8 @@ __Fig. 2__: Calculating the seasonal frequency of circulation types and their pr
 
 __Fig. 3__: Persistence change visualized with the summary figure script [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R) and using the data saved in [data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData](data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData)
 
-__Fig. 4__: Summary figure created with [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R)
+__Fig. 4__: Summary figure created with [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R) using data saved in the two workspaces [data/workspace_frequency_for_summary_figure_CESM_CMIP5.RData](data/workspace_frequency_for_summary_figure_CESM_CMIP5.RData) and [data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData](data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData)
+
 
  
 - Script for Figs. S3-7 includes the analysis of past time series and trends for the four main circulation types
