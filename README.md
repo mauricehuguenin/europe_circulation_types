@@ -19,8 +19,11 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 
 # List of Figures
 __Fig. 1__: Calculating the persistence measure as the regression fit of the consecutive circulation type period distribution with the script [Fig1_persistence_measure_circulation_type.R](Fig1_persistence_measure_circulation_type.R)
+
 __Fig. 2__: Calculating the seasonal frequency of circulation types and their projected change for the future time period 2070-2099 in [Fig2_frequency_circulation_type_and_future_change.R](Fig2_frequency_circulation_type_and_future_change.R)
+
 __Fig. 3__: Persistence change visualized with the summary figure script [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R) and using the data saved in [data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData](data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData)
+
 __Fig. 4__: Summary figure created with [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R)
 
  
@@ -28,14 +31,19 @@ __Fig. 4__: Summary figure created with [Fig4_summary_change_persistence_frequen
 
 # Data folder
 
-- __WTC_MCH_19570901-20180831.dat__ is the COST733class output file from the ERA-40/-Interim reanalysis product obtained from MeteoSwiss. The column 'wkwtg1d0' represents output obtained from the GWL method using geopotential height at 500 hPa and 10 circulation types (i.e. the data we used in this study)
-- __cost_CESM12-LE_historical_rcp85_1960-2099_Z500.dat__ is the COST733class classification output for the CESM data using geopotential height fields at 500 hPa
-- __cost_CMIP5_historical_rcp85_1960-2099_Z500.dat__ is the COST733class classification output for the CMIP5 data using geopotential height fields at 500 hPa
-- __cost_CESM12-LE_historical_rcp85_1960-2099_PSL.dat__ is the COST733class classification output for the CESM data using sea level pressure fields
-- __cost_CMIP5_historical_rcp85_1960-2099_PSL.dat__ is the COST733class classification output for the CMIP5 data using sea level pressure fields 
-- __cost_CMIP5_historical_rcp85_1960-2099_uas.dat__ is the COST733class classification output for the CMIP5 data using eastward near-surface wind as input
+- [data/WTC_MCH_19570901-20180831.dat](data/WTC_MCH_19570901-20180831.dat) is the COST733class output file from the ERA-40/-Interim reanalysis product obtained from MeteoSwiss. The column 'wkwtg1d0' represents output obtained from the GWL method using geopotential height at 500 hPa and 10 circulation types (i.e. the data we used in this study)
 
-- __date.dat__ and __date_no_leap_days.dat__ contain the first three columns with YYYY | MM | DD data for a period with leap days and without leap days
+- [data/cost_CESM12-LE_historical_rcp85_1960-2099_Z500.dat](data/cost_CESM12-LE_historical_rcp85_1960-2099_Z500.dat) is the COST733class classification output for the CESM data using geopotential height fields at 500 hPa
+
+- [data/cost_CMIP5_historical_rcp85_1960-2099_Z500.dat](data/cost_CMIP5_historical_rcp85_1960-2099_Z500.dat) is the COST733class classification output for the CMIP5 data using geopotential height fields at 500 hPa
+
+- [data/cost_CESM12-LE_historical_rcp85_1960-2099_PSL.dat](data/cost_CESM12-LE_historical_rcp85_1960-2099_PSL.dat) is the COST733class classification output for the CESM data using sea level pressure fields
+
+- [data/cost_CMIP5_historical_rcp85_1960-2099_PSL.dat](data/cost_CMIP5_historical_rcp85_1960-2099_PSL.dat) is the COST733class classification output for the CMIP5 data using sea level pressure fields 
+
+- [data/cost_CMIP5_historical_rcp85_1960-2099_uas.dat](data/cost_CMIP5_historical_rcp85_1960-2099_uas.dat) is the COST733class classification output for the CMIP5 data using eastward near-surface wind as input
+
+- data/date.dat](data/date.dat) and [data/date_no_leap_days.dat](data/date_no_leap_days.dat) contain the first three columns with YYYY | MM | DD data for a period with leap days and without leap days
 
 COST733class classification output is given the following way:
 
