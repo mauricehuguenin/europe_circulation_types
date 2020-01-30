@@ -12,10 +12,10 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 
 # Analysis Scripts
 
-- __extract_patterns*.m__ are the MATLAB files I used to pull out all the circulation type maps shown in the Supporting Information Fig. S9-S20
-- __leap_day*.py__ are the scripts I used to insert leap days every 4th year for those models that do not have leap days. I basically inserted a day with a 'NAN' circulation type randomly within that year which as a leap day. This was necessary in order to align the dates and the cost output files
-- __merging_cmip5.py__ and __preprocessing_cesm.py__ are basically the same scripts but for the two model data sets and show the preprocessing of the raw output files in order for use in cost733class. See also the documentation in the Supporting Information, Section 2
-- __preprocessing_cesm_maps_data.py__ and __preprocessing_cmip5_maps_data.py__ are the scripts used to prepare the raw model data sets for the circulation type maps in MATLAB (i.e. extracting Central European region, only selecting specific variables, only selecting 1980-2099 time period, ...)
+- (extract_patterns_cesm_with_differences.m](extract_patterns_cesm_with_differences.m) and [extract_patterns_cmip5_with_differences.m](extract_patterns_cmip5_with_differences.m) are the MATLAB files I used to pull out all the circulation type maps shown in the Supporting Information Fig. S9-S20 including the differences in the maps for the past and future time periods
+- [leap_day_cesm.py](leap_day_cesm.py) and [leap_day_cmip5.py](leap_day_cmip5.py) are the scripts I used to insert leap days every 4th year for those models that do not have leap days. I basically inserted a day with a 'NAN' circulation type randomly within that year which as a leap day. This was necessary in order to align the dates and the cost output files
+- [merging_cmip5.py](merging_cmip5.py) and [preprocessing_cesm.py](preprocessing_cesm.py) are basically the same scripts but for the two model data sets and show the preprocessing of the raw output files in order for use in cost733class. See also the documentation in the Supporting Information, Section 2
+- [preprocessing_cesm_maps_data.py](preprocessing_cesm_maps_data.py) and [preprocessing_cmip5_maps_data.py](preprocessing_cmip5_maps_data.py) are the scripts used to prepare the raw model data sets for the circulation type maps in MATLAB (i.e. extracting Central European region, only selecting specific variables, only selecting 1980-2099 time period, ...)
 
 # List of Figures
 __Fig. 1__: Calculating the persistence measure as the regression fit of the consecutive circulation type period distribution with the script [Fig1_persistence_measure_circulation_type.R](Fig1_persistence_measure_circulation_type.R)
@@ -43,7 +43,7 @@ __Fig. 4__: Summary figure created with [Fig4_summary_change_persistence_frequen
 
 - [data/cost_CMIP5_historical_rcp85_1960-2099_uas.dat](data/cost_CMIP5_historical_rcp85_1960-2099_uas.dat) is the COST733class classification output for the CMIP5 data using eastward near-surface wind as input
 
-- data/date.dat](data/date.dat) and [data/date_no_leap_days.dat](data/date_no_leap_days.dat) contain the first three columns with YYYY | MM | DD data for a period with leap days and without leap days
+- [data/date.dat](data/date.dat) and [data/date_no_leap_days.dat](data/date_no_leap_days.dat) contain the first three columns with YYYY | MM | DD data for a period with leap days and without leap days
 
 COST733class classification output is given the following way:
 
