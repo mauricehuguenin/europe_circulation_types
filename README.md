@@ -1,5 +1,5 @@
 # europe_circulation_types
-Scripts used for the project: __Assessing Changes in the Frequency and Persistence of Atmospheric Circulation Types Over Central Europe__
+Scripts used for the project: __Changes in the Frequency and Persistence of Atmospheric Circulation Types Over Central Europe__
 
 Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Scherrer(2), Cornelia Schwierz(2) and Reto Knutti(1)
 
