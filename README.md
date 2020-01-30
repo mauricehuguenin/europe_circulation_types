@@ -22,7 +22,7 @@ __Fig. 1__: Calculating the persistence measure as the regression fit of the con
 
 __Fig. 2__: Calculating the seasonal frequency of circulation types and their projected change for the future time period 2070-2099 in [Fig2_frequency_circulation_type_and_future_change.R](Fig2_frequency_circulation_type_and_future_change.R)
 
-__Fig. 3__: Persistence change visualized with the summary figure script [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R) and using the data saved in [data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData](data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData)
+__Fig. 3__: Persistence change visualized with the summary figure script [Fig3_persistence_change_summer_and_winter_and_ensemble_variability_summary.R](Fig3_persistence_change_summer_and_winter_and_ensemble_variability_summary.R) and using the data saved in [data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData](data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData)
 
 __Fig. 4__: Summary figure created with [Fig4_summary_change_persistence_frequency_temperature_precipitation.R](Fig4_summary_change_persistence_frequency_temperature_precipitation.R) using data saved in the two workspaces [data/workspace_frequency_for_summary_figure_CESM_CMIP5.RData](data/workspace_frequency_for_summary_figure_CESM_CMIP5.RData) and [data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData](data/workspace_persistence_for_summary_figure_CESM_CMIP5.RData)
 
