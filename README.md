@@ -13,7 +13,7 @@ Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Sch
 # Packages and Functions
 I use the following packages which are publicly available online:
 
-- [https://ggplot2.tidyverse.org/reference/ggplot.html](ggplot2) is a visualization package for R that initializes a ggplot object. I quote from the webpage: "It can be used to declare the input data frame for a graphic and to specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden."
+- [ggplot2](https://ggplot2.tidyverse.org/reference/ggplot.html) is a visualization package for R that initializes a ggplot object. I quote from the webpage: "It can be used to declare the input data frame for a graphic and to specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden."
 
 - the [m_map](https://www.eoas.ubc.ca/~rich/map.html) package to visualize spatial maps. Pawlowicz, R., 2019. "M_Map: A mapping package for MATLAB", version 1.4k, [Computer software], available online at www.eoas.ubc.ca/~rich/map.html.
 
