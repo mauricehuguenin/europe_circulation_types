@@ -1,7 +1,7 @@
 # europe_circulation_types
 Analysis Scripts and Data used for the publication: 
 
-Huguenin, M. F., Fischer, E. M., Kotlarski, S., Scherrer, S. C., Schwierz, C., & Knutti, R. (2020). Lack of Change in the Projected Frequency and Persistence of Atmospheric Circulation Types Over Central Europe. *Geophysical Research Letters*, **47**. [doi.org/10.1029/2019GL086132](doi.org/10.1029/2019GL086132)
+Huguenin, M. F., Fischer, E. M., Kotlarski, S., Scherrer, S. C., Schwierz, C., & Knutti, R. (2020). Lack of Change in the Projected Frequency and Persistence of Atmospheric Circulation Types Over Central Europe. *Geophysical Research Letters*, **47**. [https://doi.org/10.1029/2019GL086132](https://doi.org/10.1029/2019GL086132)
 
 # Packages and Functions
 I use the following packages which are publicly available online:
