@@ -1,14 +1,7 @@
 # europe_circulation_types
-Scripts used for the project: __Lack of Change in the Projected Frequency and Persistence of Atmospheric Circulation Types Over Central Europe__
+Analysis Scripts and Data used for the publication: 
 
-Maurice F. Huguenin(1,2,3), Erich M. Fischer(1), Sven Kotlarski(2), Simon C. Scherrer(2), Cornelia Schwierz(2) and Reto Knutti(1)
-
-
-1 Institute for Atmospheric and Climate Science, ETH Zurich, 8092 Zurich, Switzerland
- 
-2 Federal Office of Meteorology and Climatology, MeteoSwiss, 8058 Zurich, Switzerland
-
-3 Climate Change Research Centre and ARC Centre of Excellence for Climate Extremes, University of New South Wales, New South Wales 2052, Australia 
+Huguenin, M. F., Fischer, E. M., Kotlarski, S., Scherrer, S. C., Schwierz, C., & Knutti, R.. (2020). Lack of Change in the Projected Frequency and Persistence of Atmospheric Circulation Types Over Central Europe. *Geophysical Research Letters*, **47**. [doi.org/10.1029/2019GL086132](doi.org/10.1029/2019GL086132)
 
 # Packages and Functions
 I use the following packages which are publicly available online:
